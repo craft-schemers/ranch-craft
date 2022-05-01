@@ -9,6 +9,7 @@ public class RanchCraftMod implements ModInitializer {
 	// It is considered best practice to use your mod id as the logger's name.
 	// That way, it's clear which mod wrote info, warnings, and errors.
 	public static final Logger LOGGER = LoggerFactory.getLogger("modid");
+
 	private static final String MOD_NAME = "Rain Gauge";
 	private static final Block RAIN_GAUGE =
 		new Block(FabricBlockSettings.of(Material.GLASS).strength(2.0f));
@@ -20,7 +21,7 @@ public class RanchCraftMod implements ModInitializer {
 		// Proceed with mild caution.
 
 		LOGGER.info("Hello Fabric world!");
-		// TODO first parm in Identifier
+		// TODO first param in Identifier
 		Registry.register(Registry.BLOCK, Identifier("TODO", "rain_gauge"), RAIN_GAUGE);
 		// TODO double check .REDSTONE
 		Registry.register(Registry.ITEM, Identifier("TODO", "rain_gauge"),
