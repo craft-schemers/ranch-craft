@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "ranch-craft",
+  "version": "${version}",
+
+  "name": "Ranch Craft",
+  "description": "Ranchify your craft!",
+  "authors": [
+    "Mark Vadeika",
+    "Andrew Vadeika",
+    "Brandon Perez",
+    "Robert Kim",
+    "David Viggiano"
+  ],
+  "contact": {
+    "homepage": "https://github.com/craft-schemers/ranch-craft",
+    "sources": "https://github.com/craft-schemers/ranch-craft",
+    "issues": "https://github.com/craft-schemers/ranch-craft/issues"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/modid/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.craftschemers.ranchcraft.RanchCraftMod"
+    ]
+  },
+  "mixins": [
+    "modid.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.13.3",
+    "fabric": "*",
+    "minecraft": "~1.18.2",
+    "java": ">=17"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
