@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "ranch-craft",
+  "id": "ranchcraft",
   "version": "${version}",
 
   "name": "RanchCraft",
@@ -18,8 +18,8 @@
     "issues": "https://github.com/craft-schemers/ranch-craft/issues"
   },
 
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "license": "MIT",
+  "icon": "assets/ranchcraft/textures/item/watering_can.png",
 
   "environment": "*",
   "entrypoints": {
@@ -28,7 +28,7 @@
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "ranchcraft.mixins.json"
   ],
 
   "depends": {
