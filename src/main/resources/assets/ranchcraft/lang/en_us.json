@@ -1,5 +1,7 @@
 {
   "item.ranchcraft.watering_can": "Watering Can",
+  "item.ranchcraft.scythe": "Scythe",
 
-  "itemGroup.ranchcraft.farming": "Farming Tab"
+  "itemGroup.ranchcraft.farming": "Farming Tab",
+  "enchantment.ranchcraft.auto_smelter": "Auto Smelter"
 }

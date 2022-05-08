@@ -1,7 +1,9 @@
 package com.craftschemers.ranchcraft;
 
 import com.craftschemers.ranchcraft.block.ModBlocks;
+import com.craftschemers.ranchcraft.enchantment.ModEnchantments;
 import com.craftschemers.ranchcraft.item.ModItems;
+import com.craftschemers.ranchcraft.listener.ModListeners;
 import net.fabricmc.api.ModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +23,9 @@ public class RanchCraftMod implements ModInitializer {
 
 		ModItems.registerModItems();
         ModBlocks.registerModBlocks();
+        ModEnchantments.registerModEnchantments();
+        ModListeners.registerModListeners();
 
     }
+
 }

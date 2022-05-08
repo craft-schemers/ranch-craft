@@ -10,6 +10,7 @@ public class ModItemGroup {
 
     public static final ItemGroup FARMING = FabricItemGroupBuilder.build(
             new Identifier(RanchCraftMod.MOD_ID, "farming"),
-            () -> new ItemStack(ModItems.WATERING_CAN));
+            () -> new ItemStack(ModItems.WATERING_CAN)
+    );
 
 }

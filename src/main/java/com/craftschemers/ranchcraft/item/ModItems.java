@@ -1,7 +1,7 @@
 package com.craftschemers.ranchcraft.item;
 
 import com.craftschemers.ranchcraft.RanchCraftMod;
-import com.craftschemers.ranchcraft.item.custom.DowsingRodItem;
+import com.craftschemers.ranchcraft.item.custom.ScytheItem;
 import com.craftschemers.ranchcraft.item.custom.WateringCanItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.item.Item;
@@ -13,6 +13,8 @@ public class ModItems {
     public static final Item WATERING_CAN = registerItem("watering_can",
             new WateringCanItem(new FabricItemSettings().group(ModItemGroup.FARMING)));
 
+    public static final Item SCYTHE = registerItem("scythe",
+            new ScytheItem(new FabricItemSettings().group(ModItemGroup.FARMING)));
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registry.ITEM, new Identifier(RanchCraftMod.MOD_ID, name), item);
