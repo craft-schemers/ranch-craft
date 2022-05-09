@@ -1,6 +1,7 @@
 package com.craftschemers.ranchcraft.block;
 
 import com.craftschemers.ranchcraft.RanchCraftMod;
+import com.craftschemers.ranchcraft.block.custom.HarvesterBlock;
 import com.craftschemers.ranchcraft.item.ModItemGroup;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -14,8 +15,8 @@ import net.minecraft.util.registry.Registry;
 
 public class ModBlocks {
 
-//    public static final Block MYTHRIL_BLOCK = registerBlock("mythril_block",
-//            new Block(FabricBlockSettings.of(Material.METAL).strength(6f).requiresTool()), ModItemGroup.MYTHRIL);
+    public static final Block HARVESTER_BLOCK = registerBlock("harvester_block",
+            new HarvesterBlock(FabricBlockSettings.of(Material.METAL).strength(6f).requiresTool()), ModItemGroup.FARMING);
 
     private static Block registerBlock(String name, Block block, ItemGroup group) {
         registerBlockItem(name, block, group);
