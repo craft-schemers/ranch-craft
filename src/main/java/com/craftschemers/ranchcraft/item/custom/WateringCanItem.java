@@ -15,8 +15,6 @@ import net.minecraft.world.WorldEvents;
 
 public class WateringCanItem extends Item {
 
-    // This item doesn't do much right now...
-
     public WateringCanItem(Settings settings) {
         super(settings);
     }
