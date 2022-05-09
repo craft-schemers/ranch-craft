@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:wheat"
+    },
+    "title": "Ranchcraft Mod",
+    "description": "Go farming!",
+    "frame": "task",
+    "show_toast": false,
+    "annouce_to_chat": false,
+    "background": "minecraft:textures/block/hay_block_top.png"
+  },
+  "criteria": {
+    "requirement": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "ranchcraft:watering_can"
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
