@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "ranchcraft:block/harvester_block"
+  }
+}

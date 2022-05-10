@@ -25,6 +25,9 @@
   "entrypoints": {
     "main": [
       "com.craftschemers.ranchcraft.RanchCraftMod"
+    ],
+    "client": [
+      "com.craftschemers.ranchcraft.RanchCraftClientMod"
     ]
   },
   "mixins": [

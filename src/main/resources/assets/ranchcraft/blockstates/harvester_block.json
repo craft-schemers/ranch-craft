@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": {"model": "ranchcraft:block/harvester_block" }
+  }
+}

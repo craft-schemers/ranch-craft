@@ -1,6 +1,7 @@
 package com.craftschemers.ranchcraft;
 
 import com.craftschemers.ranchcraft.block.ModBlocks;
+import com.craftschemers.ranchcraft.block.entity.ModBlockEntities;
 import com.craftschemers.ranchcraft.enchantment.ModEnchantments;
 import com.craftschemers.ranchcraft.item.ModItems;
 import com.craftschemers.ranchcraft.listener.ModListeners;
@@ -25,6 +26,7 @@ public class RanchCraftMod implements ModInitializer {
         ModBlocks.registerModBlocks();
         ModEnchantments.registerModEnchantments();
         ModListeners.registerModListeners();
+        ModBlockEntities.registerAllBlockEntities();
 
     }
 

@@ -2,6 +2,8 @@
   "item.ranchcraft.watering_can": "Watering Can",
   "item.ranchcraft.scythe": "Scythe",
 
+  "block.ranchcraft.harvester_block": "Harvester Block",
+
   "itemGroup.ranchcraft.farming": "Farming Tab",
   "enchantment.ranchcraft.auto_smelter": "Auto Smelter"
 }
