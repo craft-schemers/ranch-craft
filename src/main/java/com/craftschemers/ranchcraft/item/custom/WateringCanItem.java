@@ -3,16 +3,24 @@ package com.craftschemers.ranchcraft.item.custom;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.tag.FluidTags;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
+import net.minecraft.world.event.GameEvent;
 
 public class WateringCanItem extends Item {
 
@@ -27,12 +35,35 @@ public class WateringCanItem extends Item {
     }
 
     @Override
+    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+        ItemStack itemStack = user.getStackInHand(hand);
+        BlockHitResult hitResult = BucketItem.raycast(world, user, RaycastContext.FluidHandling.SOURCE_ONLY);
+        if (((HitResult) hitResult).getType() == HitResult.Type.MISS) {
+            return TypedActionResult.pass(itemStack);
+        }
+        if (((HitResult) hitResult).getType() == HitResult.Type.BLOCK) {
+            BlockPos blockPos = hitResult.getBlockPos();
+            if (!world.canPlayerModifyAt(user, blockPos)) {
+                return TypedActionResult.pass(itemStack);
+            }
+            if (world.getFluidState(blockPos).isIn(FluidTags.WATER)) {
+                world.playSound(user, user.getX(), user.getY(), user.getZ(), SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.NEUTRAL, 1.0f, 1.0f);
+                world.emitGameEvent(user, GameEvent.FLUID_PICKUP, blockPos);
+                itemStack.setDamage(0);
+                return TypedActionResult.success(itemStack, world.isClient());
+            }
+        }
+        return TypedActionResult.pass(itemStack);
+    }
+
+    @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
 
         PlayerEntity player = context.getPlayer();
+        World world = context.getWorld();
         FertilizeResult result = useOnFertilizable(context.getStack(), player, context.getWorld(), context.getBlockPos());
 
-        if (context.getWorld().isClient) {
+        if (world.isClient) {
 
             if (player == null) {
                 return super.useOnBlock(context);
