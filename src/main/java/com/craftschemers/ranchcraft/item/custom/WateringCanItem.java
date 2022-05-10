@@ -43,7 +43,7 @@ public class WateringCanItem extends Item {
         }
         if (((HitResult) hitResult).getType() == HitResult.Type.BLOCK) {
             BlockPos blockPos = hitResult.getBlockPos();
-            if (!world.canPlayerModifyAt(user, blockPos)) {
+            if (!world.canPlayerModifyAt(user,blockPos)) {
                 return TypedActionResult.pass(itemStack);
             }
             if (world.getFluidState(blockPos).isIn(FluidTags.WATER)) {
