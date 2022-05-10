@@ -11,7 +11,7 @@ import net.minecraft.util.registry.Registry;
 public class ModItems {
 
     public static final Item WATERING_CAN = registerItem("watering_can",
-            new WateringCanItem(new FabricItemSettings().group(ModItemGroup.FARMING)));
+            new WateringCanItem(new FabricItemSettings().maxDamage(32).group(ModItemGroup.FARMING)));
 
     public static final Item SCYTHE = registerItem("scythe",
             new ScytheItem(new FabricItemSettings().group(ModItemGroup.FARMING)));

@@ -4,6 +4,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.Fertilizable;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -15,6 +16,12 @@ import net.minecraft.world.WorldEvents;
 
 public class WateringCanItem extends Item {
 
+    private enum FertilizeResult {
+        SUCCESS,
+        FAILED_INVALID_TARGET,
+        FAILED_OUT_OF_WATER,
+    }
+
     public WateringCanItem(Settings settings) {
         super(settings);
     }
@@ -22,61 +29,46 @@ public class WateringCanItem extends Item {
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
 
-        World world = context.getWorld();
-        boolean used = useOnFertilizable(context.getWorld(), context.getBlockPos());
+        PlayerEntity player = context.getPlayer();
+        FertilizeResult result = useOnFertilizable(context.getStack(), player, context.getWorld(), context.getBlockPos());
 
-        if (context.getWorld().isClient()) {
-            PlayerEntity player = context.getPlayer();
+        if (context.getWorld().isClient) {
 
             if (player == null) {
                 return super.useOnBlock(context);
             }
 
-            BlockPos blockPos = context.getBlockPos();
-            if (used) {
-                world.playSound(
-                        blockPos.getX(),
-                        blockPos.getY(),
-                        blockPos.getZ(),
-                        SoundEvents.ITEM_BUCKET_EMPTY,
-                        SoundCategory.BLOCKS,
-                        1f,
-                        1f,
-                        true
-                );
+            if (result == FertilizeResult.SUCCESS) {
+                player.playSound(SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1f, 1f);
             } else {
-                world.playSound(
-                        blockPos.getX(),
-                        blockPos.getY(),
-                        blockPos.getZ(),
-                        SoundEvents.BLOCK_DISPENSER_FAIL,
-                        SoundCategory.BLOCKS,
-                        1f,
-                        1f,
-                        true
-                );
+                player.playSound(SoundEvents.BLOCK_DISPENSER_FAIL, SoundCategory.BLOCKS, 1f, 1f);
             }
 
-        } else {
-            world.syncWorldEvent(WorldEvents.BONE_MEAL_USED, context.getBlockPos(), 0);
+        } else if (result == FertilizeResult.SUCCESS) {
+            context.getWorld().syncWorldEvent(WorldEvents.BONE_MEAL_USED, context.getBlockPos(), 0);
         }
 
         return super.useOnBlock(context);
     }
 
-    public static boolean useOnFertilizable(World world, BlockPos pos) {
+    private static FertilizeResult useOnFertilizable(ItemStack itemStack, PlayerEntity player, World world, BlockPos pos) {
 
         Fertilizable fertilizable;
         BlockState blockState = world.getBlockState(pos);
-        if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable) blockState.getBlock()).isFertilizable(world, pos, blockState, world.isClient)) {
-            if (world instanceof ServerWorld) {
-                if (fertilizable.canGrow(world, world.random, pos, blockState)) {
-                    fertilizable.grow((ServerWorld) world, world.random, pos, blockState);
-                }
-            }
-            return true;
+        if (itemStack.getDamage() == itemStack.getMaxDamage() - 1) {
+            return FertilizeResult.FAILED_OUT_OF_WATER;
         }
-        return false;
+        if (blockState.getBlock() instanceof Fertilizable && (fertilizable = (Fertilizable) blockState.getBlock()).isFertilizable(world, pos, blockState, world.isClient)) {
+            if (fertilizable.canGrow(world, world.random, pos, blockState)) {
+                if (world instanceof ServerWorld) {
+                    fertilizable.grow((ServerWorld) world, world.random, pos, blockState);
+                    itemStack.damage(1, player, (PlayerEntity p) -> {
+                    });
+                }
+                return FertilizeResult.SUCCESS;
+            }
+        }
+        return FertilizeResult.FAILED_INVALID_TARGET;
     }
 
 }
