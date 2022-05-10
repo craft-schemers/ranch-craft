@@ -71,7 +71,7 @@ public class WateringCanItem extends Item {
 
             if (result == FertilizeResult.SUCCESS) {
                 player.playSound(SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1f, 1f);
-            } else {
+            } else if (result == FertilizeResult.FAILED_OUT_OF_WATER) {
                 player.playSound(SoundEvents.BLOCK_DISPENSER_FAIL, SoundCategory.BLOCKS, 1f, 1f);
             }
 
