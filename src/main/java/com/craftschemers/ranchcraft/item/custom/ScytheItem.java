@@ -16,8 +16,8 @@ public class ScytheItem extends Item {
     @Override
     public boolean postMine(ItemStack stack, World world, BlockState state, BlockPos pos, LivingEntity miner) {
 
-        if (state.getBlock() instanceof CropBlock targetCropBlock &&
-                state.get(targetCropBlock.getAgeProperty()) >= targetCropBlock.getMaxAge()) {
+        if (state.getBlock() instanceof CropBlock targetCropBlock
+                && state.get(targetCropBlock.getAgeProperty()) >= targetCropBlock.getMaxAge()) {
             int x = pos.getX();
             int y = pos.getY();
             int z = pos.getZ();
