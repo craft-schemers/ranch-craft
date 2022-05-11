@@ -18,14 +18,14 @@ public class HarvesterScreenHandler extends ScreenHandler {
     //The client will call the other constructor with an empty Inventory and the screenHandler will automatically
     //sync this empty inventory with the inventory on the server.
     public HarvesterScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, new SimpleInventory(1), new ArrayPropertyDelegate(2));
+        this(syncId, playerInventory, new SimpleInventory(2), new ArrayPropertyDelegate(2));
     }
 
     //This constructor gets called from the BlockEntity on the server without calling the other constructor first, the server knows the inventory of the container
     //and can therefore directly provide it as an argument. This inventory will then be synced to the client.
     public HarvesterScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate delegate) {
         super(ModScreenHandlers.HARVESTER_BLOCK_SCREEN_HANDLER, syncId);
-        checkSize(inventory, 1);
+        checkSize(inventory, 2);
         this.inventory = inventory;
         //some inventories do custom logic when a player opens it.
         inventory.onOpen(playerInventory.player);
@@ -33,7 +33,8 @@ public class HarvesterScreenHandler extends ScreenHandler {
 
         //This will place the slot in the correct locations for 1 slot. The slots exist on both server and client!
         //This will not render the background of the slots however, this is the Screens job
-        this.addSlot(new Slot(inventory, 0, 80,41));
+        this.addSlot(new Slot(inventory, 0, 56,35));
+        this.addSlot(new Slot(inventory, 1, 110,35));
 
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
@@ -44,15 +45,15 @@ public class HarvesterScreenHandler extends ScreenHandler {
     }
 
     public int getScaledProgress() {
-        int progress = this.propertyDelegate.get(0);
-        int maxProgress = this.propertyDelegate.get(1);
-        int progressFlameHeight = 13; // Height of flame in pixels
+        int progress = 200 - this.propertyDelegate.get(0);
+        int maxProgress = 200;
+        int progressTankHeight = 47; // Height of tank in pixels
 
-        return maxProgress != 0 && progress != 0 ? progress * progressFlameHeight / maxProgress : 0;
+        return progress != 0 ? progress * progressTankHeight / maxProgress : 0;
 
     }
 
-    public boolean isSmelting() {
+    public boolean hasWater() {
         return propertyDelegate.get(0) > 0;
     }
 

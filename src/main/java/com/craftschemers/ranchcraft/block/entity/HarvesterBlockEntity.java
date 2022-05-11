@@ -1,8 +1,5 @@
 package com.craftschemers.ranchcraft.block.entity;
 
-import com.craftschemers.ranchcraft.RanchCraftMod;
-import com.craftschemers.ranchcraft.block.ModBlocks;
-import com.craftschemers.ranchcraft.block.custom.HarvesterBlock;
 import com.craftschemers.ranchcraft.item.inventory.ImplementedInventory;
 import com.craftschemers.ranchcraft.screen.HarvesterScreenHandler;
 import net.minecraft.block.BlockState;
@@ -24,15 +21,15 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 public class HarvesterBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, ImplementedInventory {
 
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1, ItemStack.EMPTY);
+    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(2, ItemStack.EMPTY);
 
     protected final PropertyDelegate propertyDelegate; // we can track values on client and server
-    private int progress = 0;
+    private int cropsThatCanBeBroken = 0;
     // How many ticks it will take for the fuel to run out
-    private int maxProgress = 200;
 
 
     public HarvesterBlockEntity(BlockPos pos, BlockState state) {
@@ -40,18 +37,13 @@ public class HarvesterBlockEntity extends BlockEntity implements NamedScreenHand
         this.propertyDelegate = new PropertyDelegate() {
             @Override
             public int get(int index) {
-                return switch (index) {
-                    case 0 -> HarvesterBlockEntity.this.progress;
-                    case 1 -> HarvesterBlockEntity.this.maxProgress;
-                    default -> 0;
-                };
+                return HarvesterBlockEntity.this.cropsThatCanBeBroken;
             }
 
             @Override
             public void set(int index, int value) {
-                switch (index) {
-                    case 0 -> HarvesterBlockEntity.this.progress = value;
-                    case 1 -> HarvesterBlockEntity.this.maxProgress = value;
+                if (index == 0) {
+                    HarvesterBlockEntity.this.cropsThatCanBeBroken = value;
                 };
             }
 
@@ -82,12 +74,14 @@ public class HarvesterBlockEntity extends BlockEntity implements NamedScreenHand
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+        cropsThatCanBeBroken = nbt.getInt("cropsThatCanBeBroken"); // retrieves
         Inventories.readNbt(nbt, this.inventory);
     }
 
     @Override
     public void writeNbt(NbtCompound nbt) {
         Inventories.writeNbt(nbt, this.inventory);
+        nbt.putInt("cropsThatCanBeBroken", cropsThatCanBeBroken);
         super.writeNbt(nbt);
     }
 
@@ -95,11 +89,7 @@ public class HarvesterBlockEntity extends BlockEntity implements NamedScreenHand
     public static void tick(World world, BlockPos pos, BlockState state, HarvesterBlockEntity entity) {
 
         if (hasFuel(entity)) {
-            entity.progress++;
             checkForHarvestableCrops(world, pos, entity, 5);
-            if (entity.progress > entity.maxProgress) {
-                removeFuel(entity);
-            }
         } else {
             entity.resetProgress();
         }
@@ -107,20 +97,22 @@ public class HarvesterBlockEntity extends BlockEntity implements NamedScreenHand
     }
 
     private void resetProgress() {
-        this.progress = 0;
+        this.cropsThatCanBeBroken = 0;
     }
 
     private static boolean hasFuel(HarvesterBlockEntity entity) {
 
         ItemStack slot = entity.inventory.get(0);
-        if (slot.isEmpty()) {
-            return false;
-        }
-        return slot.getItem() == Items.WATER_BUCKET;
-    }
 
-    private static void removeFuel(HarvesterBlockEntity entity) {
-        entity.inventory.set(0, new ItemStack(Items.BUCKET));
+        if (slot.getItem() == Items.WATER_BUCKET) {
+            entity.cropsThatCanBeBroken = 200;
+            entity.inventory.set(0, new ItemStack(Items.AIR));
+            entity.inventory.set(1, new ItemStack(Items.BUCKET));
+            return true;
+        }
+
+        return entity.cropsThatCanBeBroken > 0;
+
     }
 
     private static void checkForHarvestableCrops(World world, BlockPos pos, HarvesterBlockEntity harvesterBlockEntity, int radius) {
@@ -140,6 +132,12 @@ public class HarvesterBlockEntity extends BlockEntity implements NamedScreenHand
                         // ready to harvest
                         world.breakBlock(blockPos, false); // TODO: only break if available inventory
                         world.setBlockState(blockPos, Blocks.WHEAT.getDefaultState()); // TODO: might remove
+                        harvesterBlockEntity.cropsThatCanBeBroken--;
+
+                        if (harvesterBlockEntity.cropsThatCanBeBroken <= 0) {
+                            return;
+                        }
+
                     }
 
 
@@ -150,13 +148,21 @@ public class HarvesterBlockEntity extends BlockEntity implements NamedScreenHand
         }
     }
 
-    @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction side) {
-        return ImplementedInventory.super.canExtract(slot, stack, side);
-    }
+
 
     @Override
     public DefaultedList<ItemStack> getItems() {
         return inventory;
     }
+
+    @Override
+    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction side) {
+        return slot == 0 && cropsThatCanBeBroken == 0;
+    }
+
+    @Override
+    public boolean canExtract(int slot, ItemStack stack, Direction side) {
+        return slot == 1;
+    }
+
 }
