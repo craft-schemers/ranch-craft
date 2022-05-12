@@ -14,7 +14,7 @@ public class ModItems {
             new WateringCanItem(new FabricItemSettings().maxDamage(32).group(ModItemGroup.FARMING)));
 
     public static final Item SCYTHE = registerItem("scythe",
-            new ScytheItem(new FabricItemSettings().group(ModItemGroup.FARMING)));
+            new ScytheItem(new FabricItemSettings().maxDamage(131).group(ModItemGroup.FARMING)));
 
     private static Item registerItem(String name, Item item) {
         return Registry.register(Registry.ITEM, new Identifier(RanchCraftMod.MOD_ID, name), item);

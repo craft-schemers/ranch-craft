@@ -52,53 +52,6 @@ public class ModListeners {
                 }
             }
 
-            // for scythe
-            if (world.getBlockState(pos).getBlock() instanceof CropBlock c) {
-
-                // if they aren't holding the Scythe, we don't care
-                if (player.getMainHandStack().isEmpty() || player.getMainHandStack().getItem() != ModItems.SCYTHE) {
-                    return true;
-                }
-
-                // if the crop they broke isn't ready to be harvested, we cancel the action
-                if (world.getBlockState(pos).get(c.getAgeProperty()) < c.getMaxAge()) {
-                    return false;
-                }
-
-                int RADIUS_TO_BREAK = 1;
-                int x = pos.getX();
-                int y = pos.getY();
-                int z = pos.getZ();
-
-                for (int curX = x - RADIUS_TO_BREAK; curX <= x + RADIUS_TO_BREAK; curX++) {
-                    for (int curZ = z - RADIUS_TO_BREAK; curZ <= z + RADIUS_TO_BREAK; curZ++) {
-                        BlockPos blockPos = new BlockPos(curX, y, curZ);
-                        BlockState state1 = world.getBlockState(blockPos);
-                        if (state1.getBlock() instanceof CropBlock cropBlock) {
-
-                            int age = state1.get(cropBlock.getAgeProperty());
-                            if (age >= cropBlock.getMaxAge()) {
-                                // ready to harvest
-                                world.breakBlock(blockPos, true, player);
-
-                                int slot;
-                                if ((slot = player.getInventory().getSlotWithStack(new ItemStack(Items.WHEAT_SEEDS))) >= 0) { // TODO: get respective seed
-                                    ItemStack current = player.getInventory().getStack(slot);
-                                    current.setCount(current.getCount() - 1);
-                                    player.getInventory().setStack(slot, player.getInventory().getStack(slot));
-                                    world.setBlockState(blockPos, Blocks.WHEAT.getDefaultState()); // TODO: just use the initial block broken instead of WHEAT
-                                }
-
-                            }
-
-                        }
-
-                    }
-                }
-
-                return false;
-            }
-
             return true;
         });
 
