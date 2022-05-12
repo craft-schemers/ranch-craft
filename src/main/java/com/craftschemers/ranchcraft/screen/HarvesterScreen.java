@@ -32,7 +32,6 @@ public class HarvesterScreen extends HandledScreen<HarvesterScreenHandler> {
 
         if (handler.hasWater()) {
             int progress = handler.getScaledProgress();
-            RanchCraftMod.LOGGER.info("progress: " + progress);
             drawTexture(matrices, x + 26, y + 19 + progress, 176, 55 + frame*16, 16, 47 - progress, 256, 768); // water
             drawTexture(matrices, x + 26, y + 19 + 3, 176, 14, 16, 41, 256, 768); // marks
         }

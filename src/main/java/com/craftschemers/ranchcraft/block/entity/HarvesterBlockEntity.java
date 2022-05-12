@@ -1,5 +1,6 @@
 package com.craftschemers.ranchcraft.block.entity;
 
+import com.craftschemers.ranchcraft.RanchCraftMod;
 import com.craftschemers.ranchcraft.item.inventory.ImplementedInventory;
 import com.craftschemers.ranchcraft.screen.HarvesterScreenHandler;
 import net.minecraft.block.BlockState;
@@ -149,17 +150,23 @@ public class HarvesterBlockEntity extends BlockEntity implements NamedScreenHand
     }
 
 
-
     @Override
     public DefaultedList<ItemStack> getItems() {
         return inventory;
     }
 
+
+    // This only applies to hoppers
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction side) {
-        return slot == 0 && cropsThatCanBeBroken == 0;
+
+        if (slot != 0) return false;
+        if (stack == null || stack.isEmpty()) return false;
+
+        return stack.getItem() == Items.WATER_BUCKET && cropsThatCanBeBroken <= 0; // cannot insert while water exists? might change
     }
 
+    // This only applies to hoppers
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction side) {
         return slot == 1;

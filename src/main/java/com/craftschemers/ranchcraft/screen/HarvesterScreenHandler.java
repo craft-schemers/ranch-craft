@@ -1,5 +1,8 @@
 package com.craftschemers.ranchcraft.screen;
 
+import com.craftschemers.ranchcraft.RanchCraftMod;
+import com.craftschemers.ranchcraft.screen.slot.HarvesterInputSlot;
+import com.craftschemers.ranchcraft.screen.slot.HarvesterOutputSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -9,6 +12,7 @@ import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.screen.slot.SlotActionType;
 
 public class HarvesterScreenHandler extends ScreenHandler {
     private final Inventory inventory;
@@ -31,10 +35,10 @@ public class HarvesterScreenHandler extends ScreenHandler {
         inventory.onOpen(playerInventory.player);
         this.propertyDelegate = delegate;
 
-        //This will place the slot in the correct locations for 1 slot. The slots exist on both server and client!
+        //This will place the slot in the correct locations for 2 slots. The slots exist on both server and client!
         //This will not render the background of the slots however, this is the Screens job
-        this.addSlot(new Slot(inventory, 0, 56,35));
-        this.addSlot(new Slot(inventory, 1, 110,35));
+        this.addSlot(new HarvesterInputSlot(this, inventory, 0, 56,35));
+        this.addSlot(new HarvesterOutputSlot(inventory, 1, 110, 35));
 
         addPlayerInventory(playerInventory);
         addPlayerHotbar(playerInventory);
